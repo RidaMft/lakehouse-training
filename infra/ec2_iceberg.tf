@@ -160,6 +160,10 @@ resource "aws_instance" "iceberg" {
   provisioner "remote-exec" {
     inline = [
       # 1️⃣ Mise à jour et installation de Docker
+      "sudo rm -f /var/run/yum.pid || true",
+      "sudo pkill -f yum || true",
+      "sudo yum clean all",
+      "sudo yum makecache",
       "sudo yum update -y",
       "sudo amazon-linux-extras enable docker",
       "sudo yum install -y docker",
