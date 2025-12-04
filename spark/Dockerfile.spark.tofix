@@ -1,0 +1,75 @@
+# ====== Base ======
+FROM ubuntu:22.04
+USER root
+
+# ====== Variables ======
+ENV SPARK_VERSION=3.5.2
+ENV HADOOP_VERSION=3
+ENV SPARK_HOME=/opt/spark
+ENV APACHE_SPARK_MAJOR_VERSION=3.5
+ENV ICEBERG_VERSION=1.5.0
+ENV AWSJAVASDK_VERSION=2.20.18
+ENV PATH=$SPARK_HOME/bin:$PATH
+ENV SPARK_CLASSPATH="${SPARK_HOME}/jars/*:${SPARK_CLASSPATH}"
+
+# ====== Installation dépendances système + Python 3.11 ======
+RUN echo "==> Mise à jour du système et installation des dépendances de base" && \
+    apt-get update && apt-get install -y \
+        software-properties-common \
+        openjdk-17-jdk \
+        curl wget vim net-tools ca-certificates \
+        python3.11 python3.11-venv python3.11-dev python3.11-distutils python3-pip \
+        git unzip && \
+    echo "==> Configurer Python 3.11 par défaut" && \
+    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1 && \
+    python3 --version && \
+    echo "==> Nettoyage apt" && \
+    rm -rf /var/lib/apt/lists/*
+
+# ====== Téléchargement et installation Spark ======
+RUN echo "==> Téléchargement et installation Spark $SPARK_VERSION" && \
+    wget https://archive.apache.org/dist/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-hadoop3.tgz -O /tmp/spark.tgz && \
+    tar -xzf /tmp/spark.tgz -C /opt && \
+    mv /opt/spark-$SPARK_VERSION-bin-hadoop3 $SPARK_HOME && \
+    rm /tmp/spark.tgz && \
+    echo "==> Spark installé dans $SPARK_HOME"
+
+# ====== Configuration Spark ======
+COPY spark-defaults.conf $SPARK_HOME/conf/spark-defaults.conf
+
+# ====== Installation Python packages ======
+RUN echo "==> Installation packages Python : notebook, jupyterlab, findspark, boto3, pandas, numpy, matplotlib, scipy" && \
+    python3 -m pip install --upgrade pip setuptools wheel && \
+    python3 -m pip install --no-cache-dir notebook findspark pyspark boto3 jupyterlab numpy pandas scipy matplotlib && \
+    echo "==> Installation Python terminée"
+
+# ====== Création dossier pour JARs ======
+RUN mkdir -p $SPARK_HOME/jars
+
+# ====== Téléchargement des JARs en parallèle ======
+RUN echo "==> Téléchargement des JARs Iceberg / AWS / JDBC en parallèle" && \
+    curl -L https://repo1.maven.org/maven2/com/google/guava/guava/32.0.1-jre/guava-32.0.1-jre.jar -o $SPARK_HOME/jars/guava.jar & \
+    echo "Guava téléchargé" & \
+    curl -L https://jdbc.postgresql.org/download/postgresql-42.2.24.jar -o $SPARK_HOME/jars/postgresql.jar & \
+    echo "PostgreSQL JDBC téléchargé" & \
+    curl -L https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/12.6.1.jre8/mssql-jdbc-12.6.1.jre8.jar -o $SPARK_HOME/jars/mssql-jdbc.jar & \
+    echo "MSSQL JDBC téléchargé" & \
+    curl -L https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-spark-runtime-${APACHE_SPARK_MAJOR_VERSION}_2.12/${ICEBERG_VERSION}/iceberg-spark-runtime-${APACHE_SPARK_MAJOR_VERSION}_2.12-${ICEBERG_VERSION}.jar -o $SPARK_HOME/jars/iceberg-spark.jar & \
+    echo "Iceberg Spark Runtime téléchargé" & \
+    curl -L https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/${AWSJAVASDK_VERSION}/aws-java-sdk-bundle-${AWSJAVASDK_VERSION}.jar -o $SPARK_HOME/jars/aws-java-sdk-bundle.jar & \
+    echo "AWS SDK Bundle téléchargé" & \
+    curl -L https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/${HADOOP_VERSION}/hadoop-aws-${HADOOP_VERSION}.jar -o $SPARK_HOME/jars/hadoop-aws.jar & \
+    echo "Hadoop AWS téléchargé" & \
+    curl -L https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-aws-bundle/${ICEBERG_VERSION}/iceberg-aws-bundle-${ICEBERG_VERSION}.jar -o $SPARK_HOME/jars/iceberg-aws-bundle.jar & \
+    echo "Iceberg AWS Bundle téléchargé" & \
+    wait && echo "==> Tous les JARs ont été téléchargés"
+
+# ====== Workspace Jupyter ======
+RUN mkdir -p /home/jupyter/work
+WORKDIR /home/jupyter/work
+
+# ====== Commande par défaut : Jupyter ======
+CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--no-browser", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''"]
+
+# ====== Ports exposés ======
+EXPOSE 8888 4040 9090 7077

@@ -1,0 +1,92 @@
+{
+    "version": "1.0",
+    "datasets": [
+        {
+            "name": "Performance chauffeur",
+            "query": "SELECT driver_id, AVG(on_time_rate) AS avg_on_time_rate, AVG(mpg) AS avg_mpg, SUM(revenue)/SUM(miles) AS revenue_per_mile FROM warehouse.logistic.agg_driver_monthly_metrics GROUP BY driver_id ORDER BY avg_on_time_rate DESC",
+            "database": "Trino-Iceberg"
+        },
+        {
+            "name": "Rentabilit\u00e9 routes",
+            "query": "SELECT r.route_id, SUM(l.revenue) AS total_revenue, SUM(fp.total_cost + mr.labor_cost + mr.parts_cost) AS total_cost, (SUM(l.revenue) - SUM(fp.total_cost + mr.labor_cost + mr.parts_cost)) AS profit FROM warehouse.logistic.fact_loads l JOIN warehouse.logistic.dim_routes r ON l.route_id = r.route_id LEFT JOIN warehouse.logistic.fact_trips t ON t.load_id = l.load_id LEFT JOIN warehouse.logistic.fact_fuel_purchases fp ON fp.trip_id = t.trip_id LEFT JOIN warehouse.logistic.fact_maintenance_records mr ON mr.truck_id = t.truck_id GROUP BY r.route_id ORDER BY profit DESC",
+            "database": "Trino-Iceberg"
+        },
+        {
+            "name": "Utilisation flotte",
+            "query": "SELECT truck_id, SUM(miles) AS total_miles, SUM(revenue) AS total_revenue, AVG(utilization_rate) AS avg_utilization FROM warehouse.logistic.agg_truck_utilization_metrics GROUP BY truck_id ORDER BY total_miles DESC",
+            "database": "Trino-Iceberg"
+        },
+        {
+            "name": "Analyse maintenance",
+            "query": "SELECT truck_id, SUM(maintenance_cost) AS total_maintenance_cost, SUM(downtime) AS total_downtime, SUM(maintenance_cost)/SUM(miles) AS cost_per_mile FROM warehouse.logistic.agg_truck_utilization_metrics GROUP BY truck_id ORDER BY cost_per_mile DESC",
+            "database": "Trino-Iceberg"
+        },
+        {
+            "name": "Efficacit\u00e9 carburant",
+            "query": "SELECT r.route_id, AVG(mpg) AS avg_mpg, SUM(fp.total_cost) AS fuel_cost FROM warehouse.logistic.fact_trips t JOIN warehouse.logistic.dim_routes r ON t.load_id = r.route_id LEFT JOIN warehouse.logistic.fact_fuel_purchases fp ON fp.trip_id = t.trip_id GROUP BY r.route_id ORDER BY avg_mpg DESC",
+            "database": "Trino-Iceberg"
+        },
+        {
+            "name": "Analyse client",
+            "query": "SELECT c.customer_id, c.name, SUM(l.revenue) AS total_revenue, AVG(on_time_rate) AS avg_on_time_rate FROM warehouse.logistic.fact_loads l JOIN warehouse.logistic.dim_customers c ON l.customer_id = c.customer_id LEFT JOIN warehouse.logistic.fact_trips t ON t.load_id = l.load_id LEFT JOIN warehouse.logistic.agg_driver_monthly_metrics m ON t.driver_id = m.driver_id GROUP BY c.customer_id, c.name ORDER BY total_revenue DESC",
+            "database": "Trino-Iceberg"
+        },
+        {
+            "name": "S\u00e9curit\u00e9",
+            "query": "SELECT driver_id, COUNT(incident_id) AS incident_count, SUM(CASE WHEN at_fault THEN 1 ELSE 0 END) AS preventable_incidents, SUM(cost) AS total_incident_cost FROM warehouse.logistic.fact_safety_incidents GROUP BY driver_id ORDER BY incident_count DESC",
+            "database": "Trino-Iceberg"
+        },
+        {
+            "name": "Saisonnalit\u00e9",
+            "query": "SELECT YEAR(booking_date) AS year, MONTH(booking_date) AS month, COUNT(load_id) AS load_count, AVG(revenue) AS avg_revenue FROM warehouse.logistic.fact_loads GROUP BY YEAR(booking_date), MONTH(booking_date) ORDER BY year, month",
+            "database": "Trino-Iceberg"
+        }
+    ],
+    "dashboards": [
+        {
+            "title": "Cas d'usage analytiques",
+            "charts": [
+                {
+                    "type": "bar",
+                    "title": "Performance chauffeur",
+                    "dataset": "Performance chauffeur"
+                },
+                {
+                    "type": "bar",
+                    "title": "Rentabilit\u00e9 routes",
+                    "dataset": "Rentabilit\u00e9 routes"
+                },
+                {
+                    "type": "bar",
+                    "title": "Utilisation flotte",
+                    "dataset": "Utilisation flotte"
+                },
+                {
+                    "type": "bar",
+                    "title": "Analyse maintenance",
+                    "dataset": "Analyse maintenance"
+                },
+                {
+                    "type": "bar",
+                    "title": "Efficacit\u00e9 carburant",
+                    "dataset": "Efficacit\u00e9 carburant"
+                },
+                {
+                    "type": "bar",
+                    "title": "Analyse client",
+                    "dataset": "Analyse client"
+                },
+                {
+                    "type": "bar",
+                    "title": "S\u00e9curit\u00e9",
+                    "dataset": "S\u00e9curit\u00e9"
+                },
+                {
+                    "type": "bar",
+                    "title": "Saisonnalit\u00e9",
+                    "dataset": "Saisonnalit\u00e9"
+                }
+            ]
+        }
+    ]
+}
