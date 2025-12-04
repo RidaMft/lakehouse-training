@@ -122,7 +122,6 @@ services:
     ports:
       - "19120:19120"  # API REST Nessie
     depends_on:
-      - postgres
       - minio
     networks:
       - iceberg_net
