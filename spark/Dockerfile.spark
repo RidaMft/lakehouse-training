@@ -5,7 +5,6 @@ USER root
 COPY spark-defaults.conf /opt/bitnami/spark/conf/spark-defaults.conf
 RUN chown 1001:1001 /opt/bitnami/spark/conf/spark-defaults.conf
 
-
 # Dépendances utiles et Python + pip
 RUN apt-get update && apt-get install -y \
     curl wget vim net-tools ca-certificates python3-pip python3-numpy \
@@ -13,7 +12,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Installer Jupyter et PySpark pour Python
-RUN pip3 install --no-cache-dir notebook findspark pyspark boto3
+RUN pip3 install --no-cache-dir notebook findspark pyspark boto3 great-expectations[spark] faker pandas pyarrow great-expectations s3fs
 
 # Variables versions
 ENV APACHE_SPARK_MAJOR_VERSION=3.5 \
@@ -46,16 +45,11 @@ RUN curl -L https://repo1.maven.org/maven2/com/google/guava/guava/32.0.1-jre/gua
 ENV SPARK_CLASSPATH="${SPARK_HOME}/jars/*:$SPARK_CLASSPATH"
 
 # Créer le dossier de travail Jupyter
-RUN mkdir -p /home/jupyter/work
+RUN mkdir -p /home/jupyter/work && chown -R 1001:1001 /home/jupyter
 WORKDIR /home/jupyter/work
 
 # Lancer Jupyter Notebook par défaut
 CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--no-browser", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''"]
-
-#COPY /spark/entrypoint.sh /start.sh
-#RUN chmod +x /start.sh
-#CMD ["/start.sh"]
-
 
 USER 1001
 # Exposer le port Jupyter

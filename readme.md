@@ -111,6 +111,9 @@ df_new.write.format("iceberg").mode("append").saveAsTable("iceberg.my_table")
 
 ```bash
 trino://trino@trino:8080/iceberg/
+trino://trino@trino:8080/lakehouse/
+trino://trino@trino:8080/retail/
+
 ```
 
 - **Ajout dans Superset** :

@@ -112,6 +112,8 @@ services:
       nessie.catalog.default-warehouse: "lakehouse"  # Nom du catalogue par défaut
       # The base location of the warehouse named "lakehouse"
       nessie.catalog.warehouses.lakehouse.location: "s3://lakehouse"
+      # Another warehouse named "retail"
+      nessie.catalog.warehouses.retail.location: "s3://retail-lakehouse"
       nessie.catalog.service.s3.default-options.region: "us-west-2"
       # For non-AWS S3 you need to specify the endpoint and possibly enable path-style-access
       nessie.catalog.service.s3.default-options.endpoint: "http://minio:9000"
@@ -142,7 +144,8 @@ services:
       - nessie
       - minio
     volumes:
-      - ./trino/iceberg.properties:/etc/trino/catalog/iceberg.properties
+      - ./trino/lakehouse.properties:/etc/trino/catalog/lakehouse.properties
+      - ./trino/retail.properties:/etc/trino/catalog/retail.properties
     networks:
       iceberg_net:
         aliases:
