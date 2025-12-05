@@ -44,14 +44,17 @@ RUN curl -L https://repo1.maven.org/maven2/com/google/guava/guava/32.0.1-jre/gua
 # Ajouter les JARs au CLASSPATH
 ENV SPARK_CLASSPATH="${SPARK_HOME}/jars/*:$SPARK_CLASSPATH"
 
-# Créer le dossier de travail Jupyter
-RUN mkdir -p /home/jupyter/work && chown -R 1001:1001 /home/jupyter
+# Créer le dossier de travail Jupyter + droits ouverts
+RUN mkdir -p /home/jupyter/work && \
+    chown -R 1001:1001 /home/jupyter
+
 WORKDIR /home/jupyter/work
+
+USER 1001
 
 # Lancer Jupyter Notebook par défaut
 CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--no-browser", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''"]
 
-USER 1001
 # Exposer le port Jupyter
 EXPOSE 8888
 # Exposer le port Spark

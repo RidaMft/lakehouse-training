@@ -170,6 +170,8 @@ resource "aws_instance" "iceberg" {
       "sudo systemctl enable docker",
       "sudo systemctl start docker",
       "sudo usermod -aG docker ec2-user",
+      "sudo chown -R ec2-user:ec2-user /home/ec2-user/notebooks",
+      "sudo chmod -R 777 /home/ec2-user/notebooks",
 
       # 2️⃣ Installation de Docker Compose v2 directement
       "DOCKER_COMPOSE_VERSION=2.18.1",

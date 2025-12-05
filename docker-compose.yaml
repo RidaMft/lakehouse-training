@@ -116,11 +116,10 @@ services:
       nessie.catalog.warehouses.retail.location: "s3://retail-lakehouse"
       nessie.catalog.service.s3.default-options.region: "us-west-2"
       # For non-AWS S3 you need to specify the endpoint and possibly enable path-style-access
-      nessie.catalog.service.s3.default-options.endpoint: "http://minio:9000"
+      nessie.catalog.service.s3.default-options.endpoint: ${MINIO_ENDPOINT} 
       nessie.catalog.service.s3.default-options.access-key: urn:nessie-secret:quarkus:my-secrets-default
       my-secrets-default.name.name: ${MINIO_ROOT_USER}
       my-secrets-default.name.secret: ${MINIO_ROOT_PASSWORD}
-
     ports:
       - "19120:19120"  # API REST Nessie
     depends_on:
@@ -150,8 +149,6 @@ services:
       iceberg_net:
         aliases:
           - trino
-    # Conseil : Vérifier que iceberg.properties contient bien S3 endpoint, Nessie URI et credentials
-
   # ===============================
   # Superset : visualisation BI
   # ===============================
