@@ -168,7 +168,8 @@ resource "aws_instance" "iceberg" {
       type = "ssh"
       user = "ec2-user"
       private_key = file("~/.ssh/${var.key_name}")
-      host = self.public_ip }
+      host = self.public_ip 
+    }
   }
 
 
