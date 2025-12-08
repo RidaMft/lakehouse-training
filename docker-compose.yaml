@@ -79,9 +79,7 @@ services:
   # Spark Master
   # ===============================
   spark-master:
-    build:
-      context: ./spark
-      dockerfile: Dockerfile.spark
+    image: rmeftah/spark-iceberg-jupyter:3.5.2
     container_name: spark-master
     ports:
       - "9090:9090"  # Spark WebUI

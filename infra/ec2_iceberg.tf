@@ -155,6 +155,24 @@ resource "aws_instance" "iceberg" {
   }
 
   ##############################
+  # ✅ Nettoyage CRLF → LF + exécution des scripts
+  ##############################
+  provisioner "remote-exec" {
+    inline = [
+      # Convertir CRLF en LF et rendre exécutable tous les .sh
+      "sudo bash -lc 'for dir in /home/ec2-user/superset /home/ec2-user/db-scripts /home/ec2-user/spark /home/ec2-user/notebooks /home/ec2-user/trino; do if [ -d \"$dir\" ]; then find \"$dir\" -type f -name \"*.sh\" -print0 | xargs -0 -I{} sh -c \"sed -i \\\"s/\\r$//\\\" {}; chmod +x {}\"; fi; done'",
+      # Traitement explicite du superset-init.sh si présent
+      "sudo bash -lc 'if [ -f /home/ec2-user/superset/superset-init.sh ]; then sed -i \"s/\\r$//\" /home/ec2-user/superset/superset-init.sh && chmod 755 /home/ec2-user/superset/superset-init.sh; fi'",
+    ]
+    connection { 
+      type = "ssh"
+      user = "ec2-user"
+      private_key = file("~/.ssh/${var.key_name}")
+      host = self.public_ip }
+  }
+
+
+  ##############################
   # Installation Docker & Docker Compose + lancement containers
   ##############################
   provisioner "remote-exec" {
