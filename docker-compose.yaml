@@ -151,8 +151,9 @@ services:
   # Superset : visualisation BI
   # ===============================
   superset:
-    build:
-      context: ./superset
+    image: rmeftah/superset:latest
+    #build:
+      #context: ./superset
     container_name: superset
     networks:
       - iceberg_net
