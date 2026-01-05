@@ -5,99 +5,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lakehouse Training — Checklist</title>
     <style>
-        :root {
-            --junior: #4CAF50;
-            --intermediate: #FF9800;
-            --expert: #2196F3;
-            --bg: #f8f9fa;
-            --card: #ffffff;
-            --text: #333;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
+            background: #f9fafb;
+            color: #1f2937;
+            margin: 0;
             padding: 20px;
+            line-height: 1.6;
         }
         .container {
-            max-width: 900px;
+            max-width: 800px;
             margin: 0 auto;
-        }
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        h1 {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-            color: #2c3e50;
-        }
-        .subtitle {
-            color: #7f8c8d;
-            font-size: 1.1rem;
-        }
-        .progress-container {
-            background: #e0e0e0;
-            border-radius: 10px;
-            height: 24px;
-            margin: 20px 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             overflow: hidden;
         }
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--junior), var(--intermediate), var(--expert));
-            width: 0%;
-            transition: width 0.5s ease;
-            border-radius: 10px;
-        }
-        .progress-text {
+        header {
+            background: #4f46e5;
+            color: white;
+            padding: 30px 20px;
             text-align: center;
-            font-weight: bold;
+        }
+        h1 {
+            font-size: 1.8rem;
+            margin: 0;
+        }
+        .subtitle {
+            opacity: 0.9;
+            font-size: 1rem;
             margin-top: 8px;
-            font-size: 1.2rem;
+        }
+        .progress {
+            padding: 20px;
+            background: #f3f4f6;
+            text-align: center;
+        }
+        .progress-bar {
+            height: 12px;
+            background: #e5e7eb;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, #10b981, #f59e0b, #3b82f6);
+            width: 0%;
+            transition: width 0.4s ease;
         }
         .level {
-            background: var(--card);
-            border-radius: 12px;
             padding: 20px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-bottom: 1px solid #e5e7eb;
         }
-        .level-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .level-badge {
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            color: white;
-            margin-right: 12px;
-        }
-        .junior .level-badge { background-color: var(--junior); }
-        .intermediate .level-badge { background-color: var(--intermediate); }
-        .expert .level-badge { background-color: var(--expert); }
-        .level-title {
-            font-size: 1.4rem;
-        }
-        .task-list {
-            list-style: none;
-        }
-        .task-item {
-            display: flex;
-            align-items: flex-start;
-            padding: 12px 0;
-            border-bottom: 1px solid #eee;
-        }
-        .task-item:last-child {
+        .level:last-child {
             border-bottom: none;
         }
-        .task-checkbox {
-            margin-right: 14px;
-            transform: scale(1.3);
+        .level-title {
+            display: flex;
+            align-items: center;
+            margin: 0 0 16px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        .badge {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        .junior .badge { background: #10b981; }
+        .intermediate .badge { background: #f59e0b; }
+        .expert .badge { background: #3b82f6; }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            display: flex;
+            align-items: flex-start;
+            padding: 10px 0;
+            border-bottom: 1px dashed #eee;
+        }
+        li:last-child {
+            border-bottom: none;
+        }
+        input[type="checkbox"] {
+            margin-right: 12px;
+            transform: scale(1.2);
             cursor: pointer;
         }
         .task-text {
@@ -105,22 +103,20 @@
         }
         .task-text.completed {
             text-decoration: line-through;
-            color: #777;
+            color: #9ca3af;
         }
         footer {
             text-align: center;
-            margin-top: 40px;
-            color: #7f8c8d;
+            padding: 20px;
             font-size: 0.9rem;
+            color: #6b7280;
+            background: #f9fafb;
         }
-        @media (max-width: 600px) {
-            .level-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .level-badge {
-                margin-bottom: 8px;
-            }
+        code {
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
         }
     </style>
 </head>
@@ -128,115 +124,121 @@
     <div class="container">
         <header>
             <h1>🎯 Je maîtrise le Lakehouse quand…</h1>
-            <p class="subtitle">Basé sur <a href="https://github.com/RidaMft/lakehouse-training" target="_blank" style="color:#2196F3">lakehouse-training</a> — MinIO, Spark, Iceberg, Trino, Superset, OpenMetadata, Jupyter</p>
+            <p class="subtitle">Basé sur <strong>lakehouse-training</strong> — MinIO, Spark, Iceberg, Trino, Superset, OpenMetadata, Jupyter</p>
         </header>
 
-        <div class="progress-container">
-            <div class="progress-bar" id="progressBar"></div>
+        <div class="progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div id="progressText">0% — Débutant</div>
         </div>
-        <div class="progress-text" id="progressText">0% — Débutant</div>
 
-        <!-- Niveau Junior -->
+        <!-- Junior -->
         <div class="level junior">
-            <div class="level-header">
-                <span class="level-badge">🟢 Junior</span>
-                <h2 class="level-title">Je peux exécuter et explorer</h2>
-            </div>
-            <ul class="task-list" id="junior-list">
-                <li class="task-item"><input type="checkbox" class="task-checkbox" data-level="junior"> Je lance le projet avec <code>docker compose up</code> et accède à tous les services.</li>
-                <li class="task-item"><input type="checkbox" class="task-checkbox" data-level="junior"> Je crée une table Iceberg via Spark.</li>
-                <li class="task-item"><input type="checkbox" class="task-checkbox" data-level="junior"> J’insère et je lis des données via Spark, Trino <em>et</em> Superset.</li>
-                <li class="task-item"><input type="checkbox" class="task-checkbox" data-level="junior"> Je visualise le lineage dans <strong>OpenMetadata</strong>.</li>
-                <li class="task-item"><input type="checkbox" class="task-checkbox" data-level="junior"> J’identifie les buckets MinIO des tables.</li>
+            <h2 class="level-title"><span class="badge"></span> Junior — Je peux exécuter et explorer</h2>
+            <ul>
+                <li><input type="checkbox"> Je lance le projet avec <code>docker compose up</code></li>
+                <li><input type="checkbox"> Je crée une table Iceberg via Spark</li>
+                <li><input type="checkbox"> J’insère/lis via Spark, Trino <em>et</em> Superset</li>
+                <li><input type="checkbox"> Je vois le lineage dans OpenMetadata</li>
+                <li><input type="checkbox"> J’identifie les buckets MinIO</li>
             </ul>
         </div>
 
-        <!-- Niveau Intermédiaire -->
+        <!-- Intermédiaire -->
         <div class="level intermediate">
-            <div class="level-header">
-                <span class="level-badge">🟡 Intermédiaire</span>
-                <h2 class="level-title">Je comprends et j’adapte</h2>
-            </div>
-            <ul class="task-list" id="intermediate-list">
-                <li class="task-item"><input type="checkbox" class="task-checkbox" data-level="intermediate"> J’explique pourquoi Iceberg > simple `.parquet`.</li>
-                <li class="task-item"><input type="checkbox" class="task-checkbox" data-level="intermediate"> Je modifie un schéma sans casser les requêtes.</li>
-                <li class="task-item"><input type="checkbox" class="task-checkbox" data-level="intermediate"> Je fais un <code>ROLLBACK</code> sur une table.</li>
-                <li class="task-item"><input type="checkbox" class="task-checkbox" data-level="intermediate"> Je configure un catalogue personnalisé dans Spark.</li>
-                <li class="task-item"><input type="checkbox" class="task-checkbox" data-level="intermediate"> Je crée un dashboard Superset avec filtres.</li>
-                <li class="task-item"><input type="checkbox" class="task-checkbox" data-level="intermediate"> J’interroge la même table via Trino <em>et</em> Spark SQL.</li>
+            <h2 class="level-title"><span class="badge"></span> Intermédiaire — Je comprends et j’adapte</h2>
+            <ul>
+                <li><input type="checkbox"> J’explique pourquoi Iceberg > `.parquet`</li>
+                <li><input type="checkbox"> Je modifie un schéma sans casser les requêtes</li>
+                <li><input type="checkbox"> Je fais un <code>ROLLBACK</code></li>
+                <li><input type="checkbox"> Je configure un catalogue Spark personnalisé</li>
+                <li><input type="checkbox"> Je crée un dashboard Superset avec filtres</li>
+                <li><input type="checkbox"> J’interroge la même table via Trino <em>et</em> Spark SQL</li>
             </ul>
         </div>
 
-        <!-- Niveau Confirmé -->
+        <!-- Confirmé -->
         <div class="level expert">
-            <div class="level-header">
-                <span class="level-badge">🔵 Confirmé</span>
-                <h2 class="level-title">Je maîtrise, j’optimise, je partage</h2>
-            </div>
-            <ul class="task-list" id="expert-list">
-                <li class="task-item"><input type="checkbox" class="task-checkbox" data-level="expert"> J’automatise la maintenance Iceberg (compaction, snapshots).</li>
-                <li class="task-item"><input type="checkbox" class="task-checkbox" data-level="expert"> J’ajoute une table partitionnée + Z-Ordered.</li>
-                <li class="task-item"><input type="checkbox" class="task-checkbox" data-level="expert"> Je configure OpenMetadata pour scanner auto + taguer les PII.</li>
-                <li class="task-item"><input type="checkbox" class="task-checkbox" data-level="expert"> Je déploie sur le cloud (MinIO → S3, Spark → EMR).</li>
-                <li class="task-item"><input type="checkbox" class="task-checkbox" data-level="expert"> J’explique les trade-offs (Spark vs Trino, Iceberg vs Delta…).</li>
-                <li class="task-item"><input type="checkbox" class="task-checkbox" data-level="expert"> Je contribue au projet (notebook, bug fix, issue).</li>
+            <h2 class="level-title"><span class="badge"></span> Confirmé — Je maîtrise et j’optimise</h2>
+            <ul>
+                <li><input type="checkbox"> J’automatise la maintenance Iceberg</li>
+                <li><input type="checkbox"> J’ajoute une table partitionnée + Z-Ordered</li>
+                <li><input type="checkbox"> Je configure OpenMetadata pour scanner auto</li>
+                <li><input type="checkbox"> Je déploie sur le cloud (MinIO → S3)</li>
+                <li><input type="checkbox"> J’explique les trade-offs (Spark vs Trino…)</li>
+                <li><input type="checkbox"> Je contribue au projet</li>
             </ul>
         </div>
 
         <footer>
-            <p>✅ Vos progrès sont sauvegardés localement. Partagez votre % sur LinkedIn !</p>
-            <p><strong>Lakehouse Training</strong> — par <a href="https://github.com/RidaMft" target="_blank">@RidaMft</a></p>
+            <p>✅ Cochez les cases — vos progrès sont sauvegardés localement.</p>
+            <p><strong>Lakehouse Training</strong> — @RidaMft</p>
         </footer>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const progressBar = document.getElementById('progressBar');
+        // Attente robuste du DOM
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initChecklist);
+        } else {
+            initChecklist();
+        }
+
+        function initChecklist() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const progressFill = document.getElementById('progressFill');
             const progressText = document.getElementById('progressText');
-            const checkboxes = document.querySelectorAll('.task-checkbox');
 
-            // Charger l'état depuis localStorage
-            checkboxes.forEach(checkbox => {
-                const key = `task_${checkbox.dataset.level}_${checkbox.parentNode.textContent.trim().substring(0,50)}`;
-                const saved = localStorage.getItem(key);
-                if (saved === 'true') {
-                    checkbox.checked = true;
-                    checkbox.nextElementSibling.classList.add('completed');
-                }
-            });
+            // Tenter de charger depuis localStorage (sans crasher si non dispo)
+            try {
+                checkboxes.forEach((cb, i) => {
+                    const saved = localStorage.getItem(`check_${i}`);
+                    if (saved === '1') cb.checked = true;
+                });
+            } catch (e) {
+                console.warn('localStorage indisponible — progression non sauvegardée');
+            }
 
-            // Mettre à jour la progression
             function updateProgress() {
                 const total = checkboxes.length;
-                const completed = document.querySelectorAll('.task-checkbox:checked').length;
-                const percent = Math.round((completed / total) * 100);
+                const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+                const percent = Math.round((checked / total) * 100);
 
-                progressBar.style.width = `${percent}%`;
-                
+                progressFill.style.width = `${percent}%`;
+
                 let status = "Débutant";
                 if (percent >= 35) status = "Junior";
                 if (percent >= 70) status = "Intermédiaire";
                 if (percent === 100) status = "Confirmé";
 
                 progressText.textContent = `${percent}% — ${status}`;
+
+                // Appliquer style "completed"
+                checkboxes.forEach(cb => {
+                    const text = cb.nextElementSibling;
+                    if (text && text.classList) {
+                        text.classList.toggle('completed', cb.checked);
+                    }
+                });
+
+                // Sauvegarder (silencieusement)
+                try {
+                    checkboxes.forEach((cb, i) => {
+                        localStorage.setItem(`check_${i}`, cb.checked ? '1' : '0');
+                    });
+                } catch (e) {
+                    // ignore
+                }
             }
 
-            // Écouteurs
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    const key = `task_${this.dataset.level}_${this.parentNode.textContent.trim().substring(0,50)}`;
-                    localStorage.setItem(key, this.checked);
-                    if (this.checked) {
-                        this.nextElementSibling.classList.add('completed');
-                    } else {
-                        this.nextElementSibling.classList.remove('completed');
-                    }
-                    updateProgress();
-                });
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', updateProgress);
             });
 
             updateProgress();
-        });
+        }
     </script>
 </body>
 </html>
